@@ -31,19 +31,20 @@ jobs:
       - name: Install dependencies
         run: uv sync
 
+      # --- 修改这一步：增加 GITHUB_TOKEN 以解决 403 频率限制 ---
       - name: Install Camoufox
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: uv run camoufox fetch
 
       - name: Run Epic Awesome Gamer
         env:
-          # 传递所有必须的 Secret 变量
           EPIC_EMAIL: ${{ secrets.EPIC_EMAIL }}
           EPIC_PASSWORD: ${{ secrets.EPIC_PASSWORD }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_BASE_URL: ${{ secrets.GEMINI_BASE_URL }}
           GEMINI_MODEL: ${{ secrets.GEMINI_MODEL }}
           ENABLE_APSCHEDULER: false
-          # --- 关键：设置 PYTHONPATH 指向 app 文件夹 ---
           PYTHONPATH: app
         run: |
           echo "🚀 启动定时领取任务（已适配 AiHubMix 中转）..."
